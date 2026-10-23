@@ -1,0 +1,46 @@
+#!/bin/sh
+set -e
+
+# Enforce Trunk-Based Development and Conventional Commits on push
+z40="0000000000000000000000000000000000000000"
+
+while read local_ref local_sha remote_ref remote_sha; do
+  # Ignore branch deletion
+  if [ "$local_sha" = "$z40" ]; then
+    continue
+  fi
+
+  branch_name="${remote_ref#refs/heads/}"
+
+  # 1. Prohibit Git Flow branches
+  case "$branch_name" in
+    develop|release/*|hotfix/*|staging)
+      echo "::error:: [Trunk-Based Protocol Violation]"
+      echo "  Branch '$branch_name' is forbidden by PROTOCOL §9."
+      echo "  Use Trunk-Based Development with 'main' as trunk."
+      exit 1
+      ;;
+  esac
+
+  # 2. Validate commit messages being pushed using commitlint
+  if [ "$remote_sha" = "$z40" ]; then
+    # New branch: check commits against origin/main or HEAD~1
+    if git rev-parse --verify origin/main >/dev/null 2>&1; then
+      range="origin/main..$local_sha"
+    else
+      range="$local_sha~1..$local_sha"
+    fi
+  else
+    range="$remote_sha..$local_sha"
+  fi
+
+  if [ -n "$range" ] && git rev-parse "$range" >/dev/null 2>&1; then
+    npx --no -- commitlint --from="$(echo "$range" | cut -d. -f1)" --to="$(echo "$range" | cut -d. -f3-)" || {
+      echo "::error:: [Conventional Commit Violation]"
+      echo "  One or more commits being pushed violate Conventional Commits (PROTOCOL §9)."
+      exit 1
+    }
+  fi
+done
+
+exit 0

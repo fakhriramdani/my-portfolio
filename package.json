@@ -1,0 +1,53 @@
+{
+  "name": "fakhri-ramdani-portfolio",
+  "version": "2.0.0",
+  "private": true,
+  "browserslist": [
+    "last 2 Chrome versions",
+    "last 2 Edge versions",
+    "last 2 Firefox versions",
+    "last 2 Safari versions",
+    "iOS >= 16",
+    "Android >= 120"
+  ],
+  "scripts": {
+    "dev": "next dev",
+    "build": "npm run validate && next build && node scripts/prune-runtime.js",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "validate": "node --import tsx/esm scripts/validate-content.ts && python3 scripts/check-prd-ids.py && node scripts/verify-assets.js && node scripts/check-enhance.js",
+    "check-tokens": "node scripts/check-tokens.js",
+    "verify-assets": "node scripts/verify-assets.js",
+    "check-prd-ids": "python3 scripts/check-prd-ids.py",
+    "test": "tsx --test tests/*.test.ts tests/*.test.tsx",
+    "smoke": "node scripts/smoke.js",
+    "probe:deployed": "node scripts/probe-deployed.js",
+    "commitlint": "commitlint --from=HEAD~1",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "next": "16.4.1",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^21.2.4",
+    "@commitlint/config-conventional": "^21.2.4",
+    "@playwright/test": "^1.64.1",
+    "@tailwindcss/turbopack": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "acorn": "^8.19.0",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.1",
+    "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
+    "prettier": "^3.9.10",
+    "tailwindcss": "^4",
+    "tsx": "^4.19.2",
+    "typescript": "^5"
+  }
+}
