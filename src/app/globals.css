@@ -1,0 +1,1443 @@
+/* ============================================================================
+   Portfolio v2 — design tokens, tema & lapisan dasar
+   ----------------------------------------------------------------------------
+   Sumber token tunggal di kode: blok `:root` di bawah ini
+   (TECH-SPEC v2.0 §5.2 warna, §5.3 tipografi, §5.4 spasi/border/radius).
+   Figma: koleksi `Portfolio v4 Notion Tokens` (mode Light/Dark) — arah pemetaan
+   Figma variable → CSS custom property → komponen, tanpa arah balik.
+   Aturan literal: tidak ada warna mentah di luar deklarasi `--color-*`, dan
+   tidak ada nilai px yang menduplikasi token. Ditegakkan `scripts/check-tokens.js`
+   (`E_TOKEN`) dan `tests/token-contrast.test.ts` (`E_CONTRAST`).
+   Gaya komponen rilis 1.x masih berada di bagian LEGACY V1 paling bawah dan
+   dihapus bertahap pada TASK-202…TASK-210 (anggaran px-nya dibekukan guard).
+   ========================================================================== */
+
+/* ---- Font mandiri: Inter 400/500/600/700 (NFR-03, C-D02) ------------------
+   Semua berkas berasal dari Inter v3.019 (SIL OFL 1.1), subset latin yang sama
+   (232 codepoint) supaya keempat bobot punya metrik vertikal identik.
+   inter-400/500/600.woff2 = artefak rilis 1.x; inter-700.woff2 ditambahkan
+   TASK-201 dari `Inter Web/Inter-Bold.woff2` (Inter 3.19 release,
+   https://github.com/rsms/inter/releases/download/v3.19/Inter-3.19.zip,
+   sha256 sumber c63158babcb7902203ed73476ccf901db34825ea524d4a36a52b5e5f97e1abf7,
+   sha256 hasil 1703c61aaaa2d4ee534d4b53ce2bb304efc1044f9ff92ac27c0f83e4bfcd31c1,
+   20.668 B) via `fontTools.subset --unicodes-file=… --flavor=woff2`. */
+
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/inter-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/inter-500.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/inter-600.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/inter-700.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---- Token mode terang (TECH-SPEC §5.2–§5.4) ----------------------------- */
+
+:root {
+  /* warna semantik (§5.2) */
+  --color-background: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-subtle: #f1f1ef;
+  --color-border: #e5e5e5;
+  --color-text-primary: #37352f;
+  --color-text-secondary: #6b6a65;
+  --color-text-tertiary: #9b9a97;
+  --color-accent: #2383e2;
+  --color-quote-border: #2383e2;
+  --color-link: #1d6ec0;
+  --color-callout-bg: #f9f9f8;
+  --color-scrim: rgb(15 15 15 / 0.5);
+  --color-focus-ring: var(--color-accent);
+  --color-focus-ring-offset: var(--color-surface);
+
+  /* keluarga & bobot font (§5.3, C-D02: hanya Inter) */
+  --font-sans:
+    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* skala ukuran font (§5.3) — semua ukuran komponen lewat token, bukan px */
+  --font-size-12: 12px;
+  --font-size-13: 13px;
+  --font-size-14: 14px;
+  --font-size-15: 15px;
+  --font-size-16: 16px;
+  --font-size-18: 18px;
+  --font-size-22: 22px;
+  --font-size-32: 32px;
+  --font-size-44: 44px;
+
+  /* alias semantik gaya teks desain → skala di atas (§5.3) */
+  --font-size-h1: var(--font-size-44);
+  --font-size-h1-mobile: var(--font-size-32);
+  --font-size-h2: var(--font-size-22);
+  --font-size-h3: var(--font-size-18);
+  --font-size-h4: var(--font-size-15);
+  --font-size-subtitle: var(--font-size-16);
+  --font-size-subtitle-mobile: var(--font-size-14);
+  --font-size-body: var(--font-size-16);
+  --font-size-body-sm: var(--font-size-15);
+  --font-size-label: var(--font-size-13);
+  --font-size-caption: var(--font-size-12);
+  --font-size-quote: var(--font-size-15);
+
+  --line-height-h1: 52px;
+  --line-height-h1-mobile: 38px;
+  --line-height-subtitle: 24px;
+  --line-height-body: 1.6;
+  --line-height-body-sm: 1.5;
+  --line-height-quote: 22px;
+  --line-height-label: 18px;
+  --line-height-caption: 18px;
+  --tracking-h1: -0.03em;
+
+  /* skala spasi basis 8 (§5.4); --space-2 = langkah hairline untuk border/cincin */
+  --space-2: 2px;
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-40: 40px;
+  --space-48: 48px;
+  --space-64: 64px;
+  --space-80: 80px;
+  --space-96: 96px;
+
+  /* kontainer dokumen (PageLayout, §3.1) */
+  --container-doc: 880px;
+  --container-doc-mobile: 358px;
+
+  /* avatar (AboutTwoColumn §3.3) */
+  --avatar-size: 160px;
+
+  /* border & radius (§5.4) */
+  --border-hairline: 1px;
+  --border-emphasis: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-full: 9999px;
+  --radius-chip: var(--radius-sm);
+  --radius-callout: var(--radius-md);
+  --radius-card: var(--radius-lg);
+  --radius-pill: var(--radius-full);
+
+  /* motion (hanya hover/focus, ≤ 150 ms; §3.12) */
+  --motion-fast: 150ms ease;
+
+  /* --- Jembatan kompatibilitas v1 ---------------------------------------
+     Nama token rilis 1.x → token v2. Semuanya `var()`, tanpa nilai baru.
+     Geometri v1 sengaja dipertahankan apa adanya supaya halaman v1 tidak
+     berubah sebelum diganti (TASK-202 memasang --container-doc 880/358).
+     DIHAPUS bersama region LEGACY V1 pada TASK-202…TASK-210. */
+  --bg-default: var(--color-background);
+  --bg-subtle: var(--color-surface-subtle);
+  --text-primary: var(--color-text-primary);
+  --text-secondary: var(--color-text-secondary);
+  --text-tertiary: var(--color-text-tertiary);
+  --text-link: var(--color-link);
+  --text-link-hover: var(--color-accent);
+  --text-visited: var(--color-link);
+  --border-subtle: var(--color-border);
+  --border-default: var(--color-border);
+  --action-primary: var(--color-accent);
+  --action-primary-hover: var(--color-accent);
+  --action-primary-pressed: var(--color-accent);
+  --action-primary-text: var(--color-background);
+  --focus-ring: var(--color-focus-ring);
+  --focus-ring-offset: var(--color-focus-ring-offset);
+  --container-content: 720px;
+  --container-tablet: 704px;
+  --container-mobile: 350px;
+  --container-narrow: 288px;
+  --nav-band-height: 56px;
+  --scroll-margin-top: 72px;
+}
+
+/* ---- Token mode gelap (§5.3/§5.6) ----------------------------------------
+   Blok `[data-theme]` adalah hook uji (Playwright/Lighthouse) — bukan toggle
+   pengguna. Kedua blok gelap wajib bernilai identik; paritas ini diverifikasi
+   otomatis oleh `scripts/check-tokens.js`. */
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-background: #191919;
+    --color-surface: #202020;
+    --color-surface-subtle: #262626;
+    --color-border: #2e2e2e;
+    --color-text-primary: #e3e2e0;
+    --color-text-secondary: #94938d;
+    --color-text-tertiary: #605f5b;
+    --color-accent: #529cca;
+    --color-quote-border: #529cca;
+    --color-link: #529cca;
+    --color-callout-bg: #202022;
+    --color-scrim: rgb(0 0 0 / 0.6);
+    --color-focus-ring: var(--color-accent);
+    --color-focus-ring-offset: var(--color-surface);
+  }
+}
+
+:root[data-theme="dark"] {
+  --color-background: #191919;
+  --color-surface: #202020;
+  --color-surface-subtle: #262626;
+  --color-border: #2e2e2e;
+  --color-text-primary: #e3e2e0;
+  --color-text-secondary: #94938d;
+  --color-text-tertiary: #605f5b;
+  --color-accent: #529cca;
+  --color-quote-border: #529cca;
+  --color-link: #529cca;
+  --color-callout-bg: #202022;
+  --color-scrim: rgb(0 0 0 / 0.6);
+  --color-focus-ring: var(--color-accent);
+  --color-focus-ring-offset: var(--color-surface);
+}
+
+:root[data-theme="light"] {
+  --color-background: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-subtle: #f1f1ef;
+  --color-border: #e5e5e5;
+  --color-text-primary: #37352f;
+  --color-text-secondary: #6b6a65;
+  --color-text-tertiary: #9b9a97;
+  --color-accent: #2383e2;
+  --color-quote-border: #2383e2;
+  --color-link: #1d6ec0;
+  --color-callout-bg: #f9f9f8;
+  --color-scrim: rgb(15 15 15 / 0.5);
+  --color-focus-ring: var(--color-accent);
+  --color-focus-ring-offset: var(--color-surface);
+}
+
+/* ---- Lapisan dasar ------------------------------------------------------- */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  scrollbar-gutter: stable;
+  /* kontrol native (scrollbar, backdrop <dialog>) mengikuti mode terpilih */
+  color-scheme: light dark;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  a,
+  .skip-link,
+  .nd-tab,
+  .nd-contacts a,
+  .nd-project,
+  .nd-modal__close {
+    transition: none;
+  }
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  color: var(--color-text-primary);
+  background: var(--color-background);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--color-link);
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Cincin fokus 2 px + offset 2 px pada kedua mode (§5.5 butir d, NFR-05). */
+:focus-visible {
+  outline: var(--border-emphasis) solid var(--color-focus-ring);
+  outline-offset: var(--border-emphasis);
+}
+
+/* ============================================================================
+   V2 — komponen Notion Document (TASK-202…)
+   ----------------------------------------------------------------------------
+   Kelas `nd-*` mengikuti DOM pada TECH-SPEC v2.0 §3.1–§3.2. Nilainya hanya
+   token dari blok `:root` di atas: 0 literal warna, 0 nilai px yang
+   menduplikasi token (ADR-0007 butir 5), ditegakkan `scripts/check-tokens.js`
+   (`E_TOKEN`). Region ini berada DI LUAR `token-guard:legacy-begin/end`,
+   sehingga setiap pelanggaran langsung gagal, bukan masuk anggaran utang.
+   Gaya komponen sengaja memakai kelas global (bukan `.module.css`) karena
+   `tsx --test` tidak dapat memuat CSS Modules — alasan & konsekuensinya
+   tercatat di ADR-0008.
+   ========================================================================== */
+
+/* ---- PageLayout (§3.1): dokumen terpusat 358 px → 880 px ---------------- */
+
+.nd-page {
+  width: 100%;
+  max-width: var(--container-doc-mobile);
+  margin-inline: auto;
+  padding-inline: var(--space-24);
+}
+
+@media (min-width: 1024px) {
+  .nd-page {
+    max-width: var(--container-doc);
+  }
+}
+
+/* ---- Skip link: elemen fokusabel pertama, target #main (AC-009.4) ------- */
+
+.skip-link {
+  position: absolute;
+  left: var(--space-8);
+  top: var(--space-8);
+  z-index: 100;
+  padding: var(--space-12) var(--space-16);
+  background: var(--color-accent);
+  color: var(--color-background);
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  transform: translateY(-200%);
+  transition: transform var(--motion-fast);
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skip-link,
+  .nd-tab {
+    transition: none;
+  }
+}
+
+/* ---- HeaderBlock (§3.2, D-028/D-034): personal, tanpa badge/ikon/CTA ---- */
+
+.nd-header {
+  padding-top: var(--space-64);
+}
+
+.nd-header__title {
+  font-size: var(--font-size-h1-mobile);
+  line-height: var(--line-height-h1-mobile);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--tracking-h1);
+  color: var(--color-text-primary);
+}
+
+.nd-header__meta {
+  margin-top: var(--space-12);
+  font-size: var(--font-size-subtitle-mobile);
+  line-height: var(--line-height-subtitle);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+}
+
+/* ---- CalloutBlock (§3.2): quote block border-kiri aksen 4 px ------------ */
+
+.nd-callout {
+  margin-top: var(--space-24);
+  padding: var(--space-16);
+  background: var(--color-callout-bg);
+  border-left: var(--space-4) solid var(--color-quote-border);
+  border-radius: var(--radius-callout);
+  font-size: var(--font-size-quote);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-quote);
+  color: var(--color-text-primary);
+}
+
+@media (min-width: 1024px) {
+  /* H1 44 px / subtitle 16 px (design-spec v10 §1.1–§1.2). */
+  .nd-header__title {
+    font-size: var(--font-size-h1);
+    line-height: var(--line-height-h1);
+  }
+
+  .nd-header__meta {
+    font-size: var(--font-size-subtitle);
+  }
+
+  /* padding callout 18 px vertikal per design-spec v10 §1.4 — di luar skala
+     8 px, jadi tidak ada token yang diduplikasi (vertikal 18 px literal). */
+  .nd-callout {
+    padding: 18px var(--space-20);
+  }
+}
+
+/* ---- AboutTwoColumn (§3.3, FR-D02/FR-D08): avatar 160 px + bio + kontak --- */
+
+.nd-section {
+  margin-top: var(--space-64);
+}
+
+.nd-section__title {
+  font-size: var(--font-size-h2);
+  line-height: 1.3;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.nd-about {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-32);
+}
+
+@media (min-width: 640px) {
+  .nd-about {
+    flex-direction: row;
+  }
+}
+
+.nd-about__avatar {
+  flex: 0 0 auto;
+  width: var(--avatar-size);
+  height: var(--avatar-size);
+}
+
+.nd-about__avatar img {
+  width: 100%;
+  height: 100%;
+}
+
+.nd-avatar--light {
+  display: block;
+}
+
+.nd-avatar--dark {
+  display: none;
+}
+
+/* Mode gelap via media query (prefers-color-scheme) */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .nd-avatar--light {
+    display: none;
+  }
+  :root:not([data-theme="light"]) .nd-avatar--dark {
+    display: block;
+  }
+}
+
+/* Mode gelap via data-theme hook (Playwright/Lighthouse test override) */
+:root[data-theme="dark"] .nd-avatar--light {
+  display: none;
+}
+:root[data-theme="dark"] .nd-avatar--dark {
+  display: block;
+}
+:root[data-theme="light"] .nd-avatar--light {
+  display: block;
+}
+:root[data-theme="light"] .nd-avatar--dark {
+  display: none;
+}
+
+.nd-about__body {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.nd-about__body > p[data-summary] {
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  color: var(--color-text-primary);
+}
+
+.nd-contacts {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.nd-contacts a {
+  color: var(--color-link);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--space-24);
+  transition: color var(--motion-fast);
+}
+
+.nd-contacts a:hover {
+  text-decoration: underline;
+}
+
+.nd-contacts a:focus-visible {
+  text-decoration: underline;
+  outline: var(--border-emphasis) solid var(--color-accent);
+  outline-offset: var(--space-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nd-contacts a {
+    transition: none;
+  }
+}
+
+/* Target sentuh ≥ 44 px pada mobile (NFR-D07) */
+@media (max-width: 639px) {
+  .nd-contacts a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
+
+/* ---- WorkExperienceSection (§3.4, FR-D03): kartu Notion 2 employer -------- */
+
+.nd-card {
+  background: var(--color-surface);
+  border: var(--border-hairline) solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: var(--space-20);
+}
+
+.nd-entry {
+  margin-top: var(--space-16);
+}
+
+.nd-entry:first-of-type {
+  margin-top: 0;
+}
+
+.nd-entry h3 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.3;
+  color: var(--color-text-primary);
+}
+
+.nd-entry__meta {
+  margin-top: var(--space-8);
+  font-size: var(--font-size-label);
+  line-height: var(--line-height-label);
+  color: var(--color-text-secondary);
+}
+
+.nd-entry__subgroup {
+  margin-top: var(--space-16);
+}
+
+.nd-entry__subgroup h4 {
+  font-size: var(--font-size-h4);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.3;
+  color: var(--color-text-primary);
+}
+
+.nd-entry__bullets {
+  margin-top: var(--space-8);
+  list-style: disc;
+  padding-left: var(--space-20);
+}
+
+.nd-entry__bullets li {
+  margin-top: var(--space-4);
+  font-size: var(--font-size-body-sm);
+  line-height: var(--line-height-body-sm);
+  color: var(--color-text-primary);
+}
+
+.nd-entry__bullets li:first-child {
+  margin-top: 0;
+}
+
+/* Non-interactive: no hover/focus state (deliberate — project cards are the only clickable elements). */
+
+/* Print: each article break-inside: avoid */
+@media print {
+  .nd-entry {
+    break-inside: avoid;
+  }
+}
+
+/* ---- DatabaseView & TabBar (§3.5, FR-D09, AC-D09.1/.2, ADR-0008) ---------- */
+
+.nd-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.nd-db {
+  margin-top: var(--space-32);
+}
+
+.nd-tabbar {
+  display: flex;
+  gap: var(--space-4);
+  margin-bottom: var(--space-20);
+}
+
+.nd-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-label);
+  line-height: var(--line-height-label);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+  min-height: var(--space-24);
+  cursor: pointer;
+  border-bottom: var(--border-emphasis) solid transparent;
+  transition: background var(--motion-fast), color var(--motion-fast);
+}
+
+@media (max-width: 639px) {
+  .nd-tabbar {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    padding-inline: var(--space-4);
+  }
+
+  .nd-tabbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nd-tab {
+    min-height: 44px;
+    white-space: nowrap;
+  }
+}
+
+.nd-tab:hover {
+  background: var(--color-surface-subtle);
+  color: var(--color-text-primary);
+}
+
+/* Active tab state via :has() (ADR-0008, WCAG 1.4.1) */
+.nd-db:has(#tab-projects:checked) [data-tab="projects"],
+.nd-db:has(#tab-skills:checked) [data-tab="skills"],
+.nd-db:has(#tab-education:checked) [data-tab="education"],
+.nd-db:has(#tab-language:checked) [data-tab="language"],
+.nd-tab[aria-selected="true"] {
+  background: var(--color-surface-subtle);
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-semibold);
+  border-bottom: var(--border-emphasis) solid var(--color-accent);
+}
+
+/* Tab keyboard focus-visible indicator */
+.nd-tabbar:has(#tab-projects:focus-visible) [data-tab="projects"],
+.nd-tabbar:has(#tab-skills:focus-visible) [data-tab="skills"],
+.nd-tabbar:has(#tab-education:focus-visible) [data-tab="education"],
+.nd-tabbar:has(#tab-language:focus-visible) [data-tab="language"],
+.nd-tab:focus-visible {
+  outline: var(--border-emphasis) solid var(--color-accent);
+  outline-offset: var(--space-2);
+}
+
+/* Panel switching without JS (baseline) */
+.nd-db__panel {
+  display: none;
+}
+
+.nd-db:has(#tab-projects:checked) [data-tab-panel="projects"],
+.nd-db:has(#tab-skills:checked) [data-tab-panel="skills"],
+.nd-db:has(#tab-education:checked) [data-tab-panel="education"],
+.nd-db:has(#tab-language:checked) [data-tab-panel="language"] {
+  display: block;
+}
+
+/* ---- Gallery Panels Grid & Cards (§3.6, §3.8, §3.9, §3.10) ---------------- */
+
+.nd-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-16);
+}
+
+@media (min-width: 640px) {
+  .nd-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .nd-project--featured {
+    grid-column: 1 / -1;
+  }
+}
+
+.nd-project,
+.nd-skillgroup,
+.nd-edu,
+.nd-lang {
+  display: flex;
+  flex-direction: column;
+}
+
+.nd-project h3,
+.nd-skillgroup h3,
+.nd-edu h3,
+.nd-lang h3 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.3;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.nd-project__title {
+  color: var(--color-text-primary);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--space-24);
+}
+
+.nd-project__title:hover {
+  text-decoration: underline;
+}
+
+.nd-project__title:focus-visible {
+  outline: var(--border-emphasis) solid var(--color-accent);
+  outline-offset: var(--space-2);
+}
+
+@media (max-width: 639px) {
+  .nd-project__title {
+    min-height: 44px;
+  }
+}
+
+.nd-project__meta,
+.nd-card__meta {
+  margin-top: var(--space-4);
+  font-size: var(--font-size-label);
+  line-height: var(--line-height-label);
+  color: var(--color-text-secondary);
+}
+
+.nd-project__summary {
+  margin-top: var(--space-8);
+  font-size: var(--font-size-body-sm);
+  line-height: var(--line-height-body-sm);
+  color: var(--color-text-secondary);
+}
+
+.nd-card__body {
+  margin-top: var(--space-8);
+  font-size: var(--font-size-body-sm);
+  line-height: var(--line-height-body-sm);
+  color: var(--color-text-primary);
+}
+
+/* Tags (chips) */
+.nd-tags {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-12) 0 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+}
+
+.nd-tags li {
+  background: var(--color-surface-subtle);
+  border-radius: var(--radius-chip);
+  padding: var(--space-4) var(--space-8);
+  font-size: var(--font-size-12);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+}
+
+.nd-tag__level {
+  font-size: var(--font-size-12);
+  color: var(--color-text-secondary);
+  margin-left: var(--space-4);
+}
+
+/* Interactive state for .nd-project */
+.nd-project {
+  cursor: pointer;
+  border: var(--border-hairline) solid var(--color-border);
+  min-height: var(--space-24);
+  transition:
+    border-color var(--motion-fast),
+    box-shadow var(--motion-fast),
+    transform var(--motion-fast);
+}
+
+.nd-project:hover {
+  border-color: var(--color-text-tertiary);
+  box-shadow: 0 1px var(--space-2) color-mix(in srgb, var(--color-text-primary) 6%, transparent);
+}
+
+.nd-project:active {
+  transform: translateY(1px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nd-project {
+    transition: none;
+  }
+}
+
+/* ---- ProjectModal Dialog Baseline (§3.7, FR-D07, AC-D07.1–.4, ADR-0008) --- */
+
+dialog.nd-modal {
+  display: none;
+  background: var(--color-surface);
+  border: var(--border-hairline) solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: var(--space-24);
+  color: var(--color-text-primary);
+  overflow-y: auto;
+  box-sizing: border-box;
+  width: calc(100% - var(--space-32));
+  max-width: var(--container-doc-mobile); /* 358px mobile baseline */
+  max-height: 90vh;
+}
+
+dialog.nd-modal:target {
+  display: block;
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  z-index: 100;
+  box-shadow:
+    0 var(--space-4) var(--space-16) color-mix(in srgb, var(--color-text-primary) 12%, transparent),
+    0 0 0 100vmax var(--color-scrim);
+}
+
+dialog.nd-modal[open] {
+  display: block;
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  z-index: 100;
+  box-shadow:
+    0 var(--space-4) var(--space-16) color-mix(in srgb, var(--color-text-primary) 12%, transparent);
+}
+
+dialog.nd-modal::backdrop,
+dialog.nd-modal:target::backdrop {
+  background: var(--color-scrim);
+}
+
+@media (min-width: 640px) {
+  dialog.nd-modal {
+    width: calc(100% - var(--space-32));
+    max-width: 760px;
+    max-height: 85vh;
+  }
+}
+
+.nd-modal__content {
+  display: flex;
+  flex-direction: column;
+}
+
+.nd-modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-16);
+}
+
+.nd-modal__title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.3;
+  color: var(--color-text-primary);
+}
+
+.nd-modal__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+  padding: var(--space-8) var(--space-12);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--radius-sm);
+  transition: background var(--motion-fast), color var(--motion-fast);
+  flex-shrink: 0;
+}
+
+.nd-modal__close:hover {
+  background: var(--color-surface-subtle);
+  color: var(--color-text-primary);
+}
+
+.nd-modal__close:focus-visible {
+  outline: var(--border-emphasis) solid var(--color-accent);
+  outline-offset: var(--space-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nd-modal__close {
+    transition: none;
+  }
+}
+
+.nd-modal__meta {
+  margin: var(--space-8) 0 0 0;
+  font-size: var(--font-size-label);
+  line-height: var(--line-height-label);
+  color: var(--color-text-secondary);
+}
+
+.nd-modal__body {
+  margin-top: var(--space-16);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  color: var(--color-text-primary);
+}
+
+.nd-modal__body p {
+  margin: 0;
+}
+
+.nd-modal__source {
+  margin: var(--space-20) 0 0 0;
+  font-size: var(--font-size-label);
+  line-height: var(--line-height-label);
+  font-style: italic;
+  color: var(--color-text-tertiary);
+}
+
+@media print {
+  dialog.nd-modal {
+    display: none !important;
+  }
+}
+
+/* ============================================================================
+   LEGACY V1 — gaya komponen rilis 1.x
+   ----------------------------------------------------------------------------
+   Region ini diganti bertahap pada TASK-202…TASK-210 dan dihapus seluruhnya
+   pada akhir epic. Selama transisi:
+     · literal warna tetap dilarang (region ini hanya memakai var());
+     · nilai px mentah yang menduplikasi token dibekukan pada anggaran
+       LEGACY_PX_DEBT baris di scripts/check-tokens.js — anggaran hanya boleh
+       turun, penambahan baru memicu E_TOKEN.
+   token-guard:legacy-begin
+   ========================================================================== */
+
+/* ---- Layout ------------------------------------------------------------- */
+
+.container {
+  width: 100%;
+  max-width: var(--container-content);
+  margin-inline: auto;
+  padding-inline: var(--space-16);
+}
+
+@media (min-width: 390px) {
+  .container {
+    padding-inline: var(--space-20);
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding-inline: var(--space-32);
+  }
+}
+
+main {
+  padding-bottom: var(--space-64);
+}
+
+section[id] {
+  scroll-margin-top: var(--scroll-margin-top);
+}
+
+/* ---- Sections (BR-006 order) -------------------------------------------- */
+
+.section {
+  margin-top: var(--space-48);
+}
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  gap: var(--space-16);
+  padding-bottom: var(--space-12);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.section-heading h2 {
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 1.04px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  flex: none;
+}
+
+/* ---- Summary (FR-003) --------------------------------------------------- */
+
+.summary {
+  margin-top: var(--space-20);
+  font-size: 18px;
+  line-height: 30px;
+  color: var(--text-secondary);
+}
+
+/* ---- Experience (FR-004, FR-005) ---------------------------------------- */
+
+.entry {
+  margin-top: var(--space-32);
+}
+
+.entry h3 {
+  font-size: 20px;
+  line-height: 28px;
+  letter-spacing: -0.2px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.entry-meta {
+  margin-top: var(--space-4);
+  font-size: 16px;
+  line-height: 26px;
+  color: var(--text-secondary);
+}
+
+.entry-meta .dates {
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.sub-group {
+  margin-top: var(--space-20);
+  padding-left: var(--space-16);
+  border-left: var(--space-2) solid var(--border-subtle);
+}
+
+.sub-group h4 {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.bullets {
+  list-style: none;
+  margin-top: var(--space-8);
+}
+
+.bullets li {
+  position: relative;
+  padding-left: var(--space-20);
+  margin-top: var(--space-8);
+  font-size: 16px;
+  line-height: 26px;
+  color: var(--text-secondary);
+}
+
+.bullets li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--text-tertiary);
+}
+
+/* ---- Education (FR-006) ------------------------------------------------- */
+
+.education-entry h3 {
+  font-size: 20px;
+  line-height: 28px;
+  letter-spacing: -0.2px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.education-entry .entry-meta {
+  margin-top: var(--space-4);
+}
+
+/* ---- Skills (FR-007, BR-008) -------------------------------------------- */
+
+.skill-block {
+  margin-top: var(--space-24);
+}
+
+.skill-block > h3 {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-12);
+}
+
+.chip-list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  padding: var(--space-8) var(--space-8);
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--space-8);
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--text-secondary);
+}
+
+.chip .level {
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 18px;
+}
+
+/* ---- Languages (FR-008, AC-007.2) --------------------------------------- */
+
+.language-list {
+  list-style: none;
+  margin-top: var(--space-20);
+}
+
+.language-row {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 16px;
+  line-height: 26px;
+}
+
+.language-row .name {
+  font-size: 16px;
+  line-height: 26px;
+  letter-spacing: 0;
+  font-weight: 400;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.language-row .proficiency {
+  color: var(--text-secondary);
+}
+
+/* ---- 404 (FR-015) ------------------------------------------------------- */
+
+.not-found {
+  padding-top: var(--space-64);
+  text-align: left;
+}
+
+.not-found .context {
+  font-size: 16px;
+  line-height: 26px;
+  color: var(--text-secondary);
+}
+
+.not-found h1 {
+  font-size: 32px;
+  line-height: 40px;
+  letter-spacing: -0.5px;
+  font-weight: 600;
+  margin-top: var(--space-8);
+}
+
+.not-found p {
+  margin-top: var(--space-12);
+  color: var(--text-secondary);
+}
+
+.not-found .back-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: var(--space-24);
+  min-height: 48px;
+  padding: var(--space-12) var(--space-16);
+  background: var(--action-primary);
+  color: var(--action-primary-text);
+  border-radius: var(--space-8);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.not-found .back-link:hover {
+  background: var(--action-primary-hover);
+  color: var(--action-primary-text);
+}
+
+/* ---- Print (FR-011, NFR-09, SCR-006/007, TASK-213, TECH-SPEC §7.7) ------- */
+
+@page {
+  size: A4 portrait;
+  margin: 8mm;
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 8mm;
+  }
+
+  body {
+    font-size: 14px;
+    line-height: 20px;
+    background: none !important;
+    color: black !important;
+  }
+
+  .nd-page {
+    max-width: 100% !important;
+    padding-inline: 0 !important;
+  }
+
+  /* Non-printable & interactive controls hidden */
+  .skip-link,
+  .nd-tabbar,
+  .nd-modal__close,
+  dialog.nd-modal,
+  [data-modal] {
+    display: none !important;
+  }
+
+  /* Sequential display of all 4 database panels */
+  #panel-projects,
+  #panel-skills,
+  #panel-education,
+  #panel-language,
+  .nd-db__panel,
+  .nd-db__panel[hidden] {
+    display: block !important;
+  }
+
+  .nd-header {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: var(--space-8) !important;
+  }
+
+  .nd-header h1 {
+    font-size: var(--font-size-22) !important;
+    line-height: var(--line-height-body) !important;
+  }
+
+  .nd-section {
+    margin-top: var(--space-12) !important;
+  }
+
+  .nd-section__title {
+    font-size: var(--font-size-18) !important;
+    margin-bottom: var(--space-4) !important;
+  }
+
+  .nd-about {
+    margin-top: var(--space-8) !important;
+  }
+
+  .nd-about h2,
+  .nd-exp h2 {
+    font-size: var(--font-size-18) !important;
+    margin-bottom: var(--space-4) !important;
+  }
+
+  .nd-about__bio {
+    font-size: var(--font-size-14) !important;
+    line-height: 20px !important;
+  }
+
+  .nd-callout {
+    margin-top: var(--space-4) !important;
+    padding: var(--space-4) var(--space-8) !important;
+    font-size: var(--font-size-14) !important;
+    line-height: 20px !important;
+  }
+
+  .nd-exp {
+    margin-top: var(--space-8) !important;
+  }
+
+  .nd-db {
+    margin-top: var(--space-12) !important;
+  }
+
+  .nd-db__panel + .nd-db__panel {
+    margin-top: var(--space-8) !important;
+  }
+
+  /* Gallery grid in print */
+  .nd-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: var(--space-8) !important;
+  }
+
+  /* Card and entry print discipline */
+  .nd-card {
+    padding: var(--space-8) !important;
+    box-shadow: none !important;
+    border: var(--border-hairline) solid var(--color-border) !important;
+    break-inside: avoid;
+  }
+
+  .nd-entry {
+    margin-top: var(--space-8) !important;
+    break-inside: avoid;
+  }
+
+  .nd-entry__subgroup {
+    margin-top: var(--space-4) !important;
+  }
+
+  .nd-entry__bullets li {
+    margin-top: var(--space-2) !important;
+    font-size: var(--font-size-14) !important;
+    line-height: 20px !important;
+  }
+
+  .nd-tags {
+    margin-top: var(--space-4) !important;
+    gap: var(--space-4) !important;
+  }
+
+  .nd-tags li {
+    font-size: var(--font-size-12) !important;
+    padding: var(--space-2) var(--space-4) !important;
+  }
+
+  .nd-card__body {
+    font-size: var(--font-size-14) !important;
+    line-height: 20px !important;
+  }
+
+  h2,
+  h3,
+  h4 {
+    break-after: avoid;
+  }
+
+  .container {
+    max-width: 100%;
+    padding-inline: 0;
+  }
+
+  /* Skills as two-column grid to save vertical space (20 skills = biggest win). */
+  .chip {
+    background: none;
+    border: none;
+    padding: 0;
+    gap: var(--space-2);
+  }
+
+  .chip-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4) var(--space-8);
+  }
+
+  /* Keep sub-groups and education entries together; allow .entry to break across pages. */
+  .sub-group,
+  .education-entry {
+    break-inside: avoid;
+  }
+
+  /* Reduce vertical spacing aggressively to fit within 2 pages. */
+  .section {
+    margin-top: var(--space-24);
+  }
+
+  .entry {
+    margin-top: var(--space-16);
+  }
+
+  .sub-group {
+    margin-top: var(--space-8);
+  }
+
+  .education-entry {
+    margin-top: var(--space-16);
+  }
+
+  .skill-block {
+    margin-top: var(--space-12);
+  }
+
+  .language-list {
+    margin-top: var(--space-8);
+  }
+
+  .section-heading {
+    padding-bottom: var(--space-4);
+  }
+
+  /* Experience bullets as two-column if needed for density. */
+  .bullets {
+    column-count: 2;
+    column-gap: var(--space-8);
+  }
+
+  .bullets li {
+    break-inside: avoid;
+    margin-top: var(--space-4);
+  }
+}
+
+/* token-guard:legacy-end */

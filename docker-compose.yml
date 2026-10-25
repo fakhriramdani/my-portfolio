@@ -1,0 +1,12 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # Deploy-time value; baked into canonical/og:url/sitemap at build time.
+        SITE_URL: ${SITE_URL:-https://example.com}
+    image: my-portfolio:latest
+    ports:
+      - "80:80"
+    restart: unless-stopped
